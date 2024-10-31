@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & ML Tutorials</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+            background-color: #007bff;
+            padding: 20px 0;
+            margin: 0;
+            font-size: 2.5em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .card {
+            width: 300px;
+            margin: 15px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            text-align: center;
+            border: 2px solid #007bff;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+
+        .card img:hover {
+            transform: scale(1.05);
+        }
+
+        .course-details {
+            display: none;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin: 20px 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .course-details.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .topic-content {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #f0f0f0;
+        }
+
+        .topic-content.active {
+            display: block;
+        }
+
+        pre {
+            white-space: pre-wrap; /* Ensure white space is preserved */
+            word-wrap: break-word; /* Allow breaking long lines */
+            background: #e7e7e7;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .toggle-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 1.1em;
+            transition: background-color 0.3s, transform 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-button[aria-expanded="true"] {
+            background-color: #0056b3;
+        }
+
+        .toggle-button[aria-expanded="true"]:before {
+            content: "-";
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        .toggle-button[aria-expanded="false"] {
+            background-color: #007bff;
+        }
+
+        .toggle-button[aria-expanded="false"]:before {
+            content: "+";
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        .toggle-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .navigation-buttons a {
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.2em;
+            color: #fff; 
+            background-color: #007bff; 
+            padding: 10px 20px; 
+            border-radius: 6px; 
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .navigation-buttons a:hover {
+            background-color: #0056b3; 
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                width: 90%;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>AI & ML Tutorials</h1>
+    <div id="root" class="container"></div>
+
+    <script type="text/babel">
+        const courses = {
+            'ml': {
+                title: "Machine Learning",
+                image: "https://www.bitext.com/wp-content/uploads/2023/03/machine-learning-deep-linguistic-analysis-in-text-analytics.jpg",
+                content: 
+                    <div>
+                        <h2>Machine Learning</h2>
+                        <img src="https://www.bitext.com/wp-content/uploads/2023/03/machine-learning-deep-linguistic-analysis-in-text-analytics.jpg" alt="Machine Learning"/>
+                        <p>Welcome to the Machine Learning tutorial. This course will guide you through the basics of machine learning, including key concepts, algorithms, and practical applications.</p>
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'ml_intro')}>Introduction to Machine Learning</button>
+                        <div id="ml_intro" className="topic-content">
+                            <p>In machine learning, we use data to train models that can predict outputs. There are several types of machine learning algorithms, including supervised, unsupervised, and reinforcement learning.</p>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'ml_supervised')}>Supervised Learning</button>
+                        <div id="ml_supervised" className="topic-content">
+                            <p>Supervised learning is a type of machine learning where the model is trained on labeled data. The goal is to learn a mapping from inputs to outputs based on the input-output pairs in the training data.</p>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'ml_unsupervised')}>Unsupervised Learning</button>
+                        <div id="ml_unsupervised" className="topic-content">
+                            <p>Unsupervised learning involves training a model on data without labels. The goal is to identify hidden patterns or intrinsic structures within the input data.</p>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'ml_model_evaluation')}>Model Evaluation</button>
+                        <div id="ml_model_evaluation" className="topic-content">
+                            <p>Model evaluation is the process of assessing the performance of a machine learning model. Common metrics include accuracy, precision, recall, and F1 score.</p>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'ml_application')}>Practical Applications</button>
+                        <div id="ml_application" className="topic-content">
+                            <p>Machine learning has a wide range of applications, including image recognition, natural language processing, and predictive analytics.</p>
+                        </div>
+                    </div>
+            },
+            'ai': {
+                title: "Artificial Intelligence",
+                image: "https://t4.ftcdn.net/jpg/02/30/44/19/360_F_230441943_oV0LSRsvbMPOhQioB7zgNs1uDs27BaOp.jpg",
+                content: 
+                    <div>
+                        <h2>Artificial Intelligence</h2>
+                        <img src="https://t4.ftcdn.net/jpg/02/30/44/19/360_F_230441943_oV0LSRsvbMPOhQioB7zgNs1uDs27BaOp.jpg" alt="Artificial Intelligence"/>
+                        <p>Welcome to the Artificial Intelligence tutorial. This course will cover the fundamental aspects of AI, including its various techniques and real-world applications.</p>
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'ai_intro')}>Introduction to Artificial Intelligence</button>
+                        <div id="ai_intro" className="topic-content">
+                            <p>Artificial Intelligence (AI) is the simulation of human intelligence processes by machines, especially computer systems. These processes include learning, reasoning, and self-correction.</p>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'ai_technique')}>AI Techniques and Algorithms</button>
+                        <div id="ai_technique" className="topic-content">
+                            <p>AI techniques include machine learning algorithms, neural networks, and deep learning. These techniques are used to build systems that can perform tasks that require human intelligence.</p>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'ai_nlp')}>Natural Language Processing</button>
+                        <div id="ai_nlp" className="topic-content">
+                            <p>Natural Language Processing (NLP) is a field of AI that focuses on the interaction between computers and humans through natural language. It involves tasks such as text analysis, language generation, and translation.</p>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'ai_robotics')}>Robotics and Automation</button>
+                        <div id="ai_robotics" className="topic-content">
+                            <p>Robotics and automation involve the design and creation of robots and automated systems that can perform tasks without human intervention. This includes industrial robots and autonomous vehicles.</p>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'ai_ethic')}>Ethics in AI</button>
+                        <div id="ai_ethic" className="topic-content">
+                            <p>Ethics in AI involves the study of the moral implications of artificial intelligence technologies. This includes issues like bias in AI algorithms, data privacy, and the impact of AI on jobs and society.</p>
+                        </div>
+                    </div>
+            },
+            'python': {
+                title: "Python Programming",
+                image: "https://t4.ftcdn.net/jpg/04/18/67/59/360_F_418675906_vU4rG3sXrdm5MKA74SKlsxhJZRElVG4G.jpg",
+                content: 
+                    <div>
+                        <h2>Python Programming</h2>
+                        <img src="https://t4.ftcdn.net/jpg/04/18/67/59/360_F_418675906_vU4rG3sXrdm5MKA74SKlsxhJZRElVG4G.jpg" alt="Python Programming"/>
+                        <p>Welcome to the Python programming tutorial. This course will introduce you to the basics of Python, including syntax, data types, functions, and more.</p>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'python_intro')}>Introduction to Python Programming</button>
+                        <div id="python_intro" className="topic-content">
+                            <p>Python is a versatile programming language known for its readability and simplicity. It is widely used in web development, data analysis, artificial intelligence, scientific computing, and more.</p>
+                            <pre><code>print("Hello, World!")</code></pre>
+                            <a href="https://www.programiz.com/python-programming/online-compiler/" target="_blank" className="toggle-button">Try Python Online!</a>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'python_data_type')}>Data Types in Python</button>
+                        <div id="python_data_type" className="topic-content">
+                            <p>Python has several built-in data types, including integers, floats, strings, and lists.</p>
+                            <p><pre>x = 10  # Integer
+                                <br></br>
+                                
+                                name = "Alice"  # String<br></br>
+                                numbers = [1, 2, 3]  # List</pre></p>
+                            <a href="https://www.programiz.com/python-programming/online-compiler/" target="_blank" className="toggle-button">Try Python Online!</a>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'python_function')}>Functions in Python</button>
+                        <div id="python_function" className="topic-content">
+                            <p>Functions are reusable pieces of code that perform a specific task. They help in organizing code and making it modular.</p>
+                            <pre><code>
+def greet(name):<br></br>
+    &emsp;return f"Hello, {name}!"<br></br>
+
+print(greet("Alice"))
+                            </code></pre>
+                            <a href="https://www.programiz.com/python-programming/online-compiler/" target="_blank" className="toggle-button">Try Python Online!</a>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'python_loop')}>Loops and Conditionals in Python</button>
+                        <div id="python_loop" className="topic-content">
+                            <p>Loops and conditionals are fundamental concepts in programming that control the flow of execution.</p>
+                            <pre><code>
+for i in range(5):<br></br>
+    &emsp;print(i)<br></br>
+
+if x &gt; 5:<br></br>
+    &emsp;print("x is greater than 5")
+                            </code></pre>
+                            <a href="https://www.programiz.com/python-programming/online-compiler/" target="_blank" className="toggle-button">Try Python Online!</a>
+                        </div>
+
+                        <button className="toggle-button" aria-expanded="false" onClick={(e) => toggleTopic(e.target, 'python_file_handling')}>File Handling in Python</button>
+                        <div id="python_file_handling" className="topic-content">
+                            <p>Python provides built-in functions for file handling. You can create, read, update, and delete files easily.</p>
+                            <pre><code>
+# Writing to a file<br></br>
+with open("example.txt", "w") as f:<br></br>
+    &emsp;f.write("Hello, World!")<br></br>
+
+# Reading from a file<br></br>
+with open("example.txt", "r") as f:<br></br>
+    &emsp;print(f.read())
+                            </code></pre>
+                            <a href="https://www.programiz.com/python-programming/online-compiler/" target="_blank" className="toggle-button">Try Python Online!</a>
+                        </div>
+                    </div>
+            }
+        };
+
+        function toggleTopic(element, topicId) {
+            const topicElement = document.getElementById(topicId);
+            if (element.getAttribute('aria-expanded') === 'true') {
+                element.setAttribute('aria-expanded', 'false');
+                topicElement.classList.remove('active');
+            } else {
+                element.setAttribute('aria-expanded', 'true');
+                topicElement.classList.add('active');
+            }
+        }
+
+        class CourseList extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { activeCourse: null };
+            }
+
+            handleClick(courseKey) {
+                this.setState({ activeCourse: courseKey });
+                document.querySelector('#root').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            goHome() {
+                this.setState({ activeCourse: null });
+                document.querySelector('#root').scrollIntoView({ behavior: 'smooth' });
+            }
+
+            render() {
+                return (
+                    <div>
+                        <div className="container">
+                            {Object.keys(courses).map((key, index) => (
+                                <div key={index} className="card" onClick={() => this.handleClick(key)}>
+                                    <img src={courses[key].image} alt={courses[key].title} />
+                                    <h2>{courses[key].title}</h2>
+                                    <p>Click to see details</p>
+                                </div>
+                            ))}
+                        </div>
+                        {this.state.activeCourse && (
+                            <div className="course-details active">
+                                <div>{courses[this.state.activeCourse].content}</div>
+                                <div className="navigation-buttons">
+                                    <a href="#home" className="back-btn" onClick={() => this.goHome()}>Home</a>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<CourseList />, document.getElementById('root'));
+    </script>
+</body>
+</html>

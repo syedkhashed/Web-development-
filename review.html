@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafeteria Review System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .food-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .food-item {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .food-item:hover {
+            transform: scale(1.02);
+        }
+
+        .food-top {
+            display: flex;
+            flex: 1;
+        }
+
+        .food-image {
+            flex: 1;
+            max-width: 400px; /* Increased image width */
+            overflow: hidden;
+        }
+
+        .food-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px 0 0 10px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .food-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .food-ratings {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .rating-bar span {
+            margin-right: 10px;
+            font-weight: bold;
+            width: 40px;
+            font-size: 1.2rem; /* Larger font size for emojis */
+        }
+
+        .bar {
+            height: 15px;
+            border-radius: 5px;
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .food-details {
+            padding: 20px;
+        }
+
+        .food-name {
+            font-size: 2rem;
+            color: #333;
+            margin: 0 0 10px;
+        }
+
+        .average-rating {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .star-rating {
+            font-size: 2.5rem;
+            color: #ccc;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 10px;
+        }
+
+        .star-rating span {
+            transition: color 0.3s;
+            display: inline-block;
+        }
+
+        .star-rating span.selected {
+            color: #ffc107; /* Gold color for selected stars */
+        }
+
+        .star-rating span:hover,
+        .star-rating span:hover ~ span {
+            color: #ffc107; /* Highlight stars on hover */
+        }
+
+        .review-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .review-form .input-field,
+        .review-form .submit-btn {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        .review-form .input-field:focus,
+        .review-form .submit-btn:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .review-form .submit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+        }
+
+        .review-form .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .recent-reviews {
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 20px;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+            color: #555;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-item h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .review-item p {
+            margin: 0;
+        }
+
+        .show-more-btn, .show-less-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .show-more-btn:hover, .show-less-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Cafeteria Review System</h1>
+    </div>
+    <div class="container">
+        <div id="foodList" class="food-list">
+            <!-- Food items will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        const foodItems = [
+            { id: 1, name: 'Samosa', image: 'https://t3.ftcdn.net/jpg/05/33/70/50/360_F_533705027_4jol1pJqWXFe8Sh05z0iM2mpZh7vg6uO.jpg', reviews: [
+                { rating: 4, comment: 'Delicious and crispy!' },
+                { rating: 5, comment: 'Best samosa ever!' },
+                { rating: 5, comment: 'A must-try for everyone!' },
+                { rating: 4, comment: 'Crispy and flavorful!' },
+                { rating: 3, comment: 'Good, but a bit oily.' },
+                { rating: 2, comment: 'Not as good as expected.' },
+                { rating: 5, comment: 'The perfect snack!' }
+            ]},
+            { id: 2, name: 'Egg Puff', image: 'https://img-global.cpcdn.com/recipes/cbc516f3962cf760/680x482cq70/kerala-egg-puffs-recipe-main-photo.jpg', reviews: [
+                { rating: 3, comment: 'Good but could use more seasoning.' },
+                { rating: 4, comment: 'Great taste and texture!' },
+                { rating: 5, comment: 'Amazing flavor!' },
+                { rating: 5, comment: 'Perfect for a quick snack!' },
+                { rating: 1, comment: 'Very bland and unappetizing.' },
+                { rating: 4, comment: 'Quite enjoyable!' },
+                { rating: 2, comment: 'I expected better.' }
+            ]},
+            { id: 3, name: 'Pizza', image: 'https://t3.ftcdn.net/jpg/06/36/30/26/360_F_636302609_Tb1JtDTQ4zawO0ub6L2fHzlrW586f9tr.jpg', reviews: [
+                { rating: 5, comment: 'Absolutely wonderful!' },
+                { rating: 4, comment: 'Could use a little more cheese.' },
+                { rating: 5, comment: 'The crust was perfect!' },
+                { rating: 3, comment: 'It was okay, but not my favorite.' },
+                { rating: 5, comment: 'Best pizza in town!' },
+                { rating: 2, comment: 'Toppings were too salty.' },
+                { rating: 4, comment: 'Very satisfying!' }
+            ]},
+            { id: 4, name: 'Burger', image: 'https://media.istockphoto.com/id/617364554/photo/hamburger-with-fries.jpg?s=612x612&w=0&k=20&c=t8fMIRewNFRU7YSMNWIx2axoyZNjsh0cxHM4vYMALf8=', reviews: [
+                { rating: 4, comment: 'Tasty but a bit greasy.' },
+                { rating: 4, comment: 'Very good, will try again.' },
+                { rating: 3, comment: 'Average burger, nothing special.' },
+                { rating: 5, comment: 'The best burger I’ve ever had!' },
+                { rating: 5, comment: 'Juicy and delicious!' },
+                { rating: 2, comment: 'Too much sauce!' }
+            ]},
+        ];
+
+        function calculateAverageRating(reviews) {
+            const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
+            return (totalRating / reviews.length).toFixed(1);
+        }
+
+        function countRatings(reviews) {
+            const count = Array(5).fill(0);
+            reviews.forEach(review => {
+                count[review.rating - 1]++;
+            });
+            return count;
+        }
+
+        function displayFoodItems() {
+            const foodList = document.getElementById('foodList');
+            foodItems.forEach(food => {
+                const foodItemDiv = document.createElement('div');
+                foodItemDiv.className = 'food-item';
+
+                const foodTopDiv = document.createElement('div');
+                foodTopDiv.className = 'food-top';
+
+                const foodImageDiv = document.createElement('div');
+                foodImageDiv.className = 'food-image';
+                foodImageDiv.innerHTML = `<img src="${food.image}" alt="${food.name}" />`;
+
+                const foodRatingsDiv = document.createElement('div');
+                foodRatingsDiv.className = 'food-ratings';
+
+                const ratingCounts = countRatings(food.reviews);
+                const emojis = ['😢', '😐', '😄', '😃', '😍'];
+
+                for (let i = 0; i < ratingCounts.length; i++) {
+                    const ratingBar = document.createElement('div');
+                    ratingBar.className = 'rating-bar';
+                    ratingBar.innerHTML = `<span>${emojis[i]} (${ratingCounts[i]})</span>`;
+                    const bar = document.createElement('div');
+                    bar.className = 'bar';
+                    bar.style.width = `${(ratingCounts[i] / food.reviews.length) * 100 || 0}%`;
+                    bar.style.backgroundColor = ['#ff0000', '#ff8000', '#ffff00', '#80ff00', '#00ff00'][i]; // Bright colors
+                    ratingBar.appendChild(bar);
+                    foodRatingsDiv.appendChild(ratingBar);
+                }
+
+                foodTopDiv.appendChild(foodImageDiv);
+                foodTopDiv.appendChild(foodRatingsDiv);
+                foodItemDiv.appendChild(foodTopDiv);
+
+                const foodDetailsDiv = document.createElement('div');
+                foodDetailsDiv.className = 'food-details';
+                foodDetailsDiv.innerHTML = `
+                    <h2 class="food-name">${food.name}</h2>
+                    <div class="average-rating">Average Rating: ${calculateAverageRating(food.reviews)} ⭐</div>
+                    <div class="star-rating" data-id="${food.id}">
+                        <span data-rating="1">☆</span>
+                        <span data-rating="2">☆</span>
+                        <span data-rating="3">☆</span>
+                        <span data-rating="4">☆</span>
+                        <span data-rating="5">☆</span>
+                    </div>
+                    <div class="review-form">
+                        <input type="text" id="comment-${food.id}" class="input-field" placeholder="Write your review..." />
+                        <button class="submit-btn" onclick="submitReview(${food.id})">Submit Review</button>
+                    </div>
+                    <div id="reviews-${food.id}" class="recent-reviews">
+                        ${food.reviews.slice(0, 2).map(review => `
+                            <div class="review-item">
+                                <h3>${review.rating} ⭐</h3>
+                                <p>${review.comment}</p>
+                            </div>
+                        `).join('')}
+                        <button class="show-more-btn" onclick="showMoreReviews(${food.id})">Show More</button>
+                        <div id="more-reviews-${food.id}" class="more-reviews" style="display: none;">
+                            ${food.reviews.slice(2).map(review => `
+                                <div class="review-item">
+                                    <h3>${review.rating} ⭐</h3>
+                                    <p>${review.comment}</p>
+                                </div>
+                            `).join('')}
+                            <button class="show-less-btn" onclick="showLessReviews(${food.id})">Show Less</button>
+                        </div>
+                    </div>
+                `;
+
+                foodItemDiv.appendChild(foodDetailsDiv);
+                foodList.appendChild(foodItemDiv);
+
+                // Star rating interaction
+                const starRatingDiv = document.querySelector(`.star-rating[data-id='${food.id}']`);
+                let selectedRating = 0;
+
+                starRatingDiv.addEventListener('mouseover', (e) => {
+                    if (e.target.dataset.rating) {
+                        Array.from(starRatingDiv.children).forEach(star => {
+                            star.classList.remove('hover');
+                        });
+                        Array.from(starRatingDiv.children).forEach(star => {
+                            if (star.dataset.rating <= e.target.dataset.rating) {
+                                star.textContent = '★'; // Filled star
+                                star.classList.add('hover');
+                            } else {
+                                star.textContent = '☆'; // Empty star
+                            }
+                        });
+                    }
+                });
+
+                starRatingDiv.addEventListener('mouseout', () => {
+                    Array.from(starRatingDiv.children).forEach(star => {
+                        star.classList.remove('hover');
+                        star.textContent = star.classList.contains('selected') ? '★' : '☆'; // Reset to selected or empty
+                    });
+                });
+
+                starRatingDiv.addEventListener('click', (e) => {
+                    if (e.target.dataset.rating) {
+                        selectedRating = e.target.dataset.rating;
+                        Array.from(starRatingDiv.children).forEach(star => {
+                            star.classList.toggle('selected', star.dataset.rating <= selectedRating);
+                            star.textContent = star.classList.contains('selected') ? '★' : '☆'; // Update to filled or empty
+                        });
+                    }
+                });
+            });
+        }
+
+        function updateAverageRating(foodId) {
+            const foodItem = foodItems.find(item => item.id === foodId);
+            const averageRating = calculateAverageRating(foodItem.reviews);
+            const averageRatingElement = document.querySelector(`#foodList .food-item:nth-child(${foodId}) .average-rating`);
+            averageRatingElement.textContent = `Average Rating: ${averageRating} ⭐`;
+        }
+
+        function submitReview(foodId) {
+            const comment = document.getElementById(`comment-${foodId}`).value;
+            const foodItemDiv = document.querySelector(`#foodList .food-item:nth-child(${foodId})`);
+            const rating = Array.from(foodItemDiv.querySelectorAll('.star-rating span.selected')).length;
+
+            if (rating > 0 && comment) {
+                const foodItem = foodItems.find(item => item.id === foodId);
+                const newReview = { rating: parseInt(rating), comment };
+                foodItem.reviews.push(newReview);
+
+                const reviewsContainer = document.getElementById(`reviews-${foodId}`);
+                const reviewItem = document.createElement('div');
+                reviewItem.classList.add('review-item');
+                
+                reviewItem.innerHTML = `<h3>${parseInt(rating)} ⭐</h3><p>${comment}</p>`;
+                reviewsContainer.prepend(reviewItem); // Add new review to the top
+
+                // Update average rating
+                updateAverageRating(foodId);
+
+                // Clear the form fields
+                document.getElementById(`comment-${foodId}`).value = '';
+                Array.from(foodItemDiv.querySelectorAll('.star-rating span')).forEach(star => {
+                    star.classList.remove('selected');
+                    star.textContent = '☆'; // Reset stars to empty
+                });
+
+                // Update the rating counts and display
+                const ratingCounts = countRatings(foodItem.reviews);
+                const ratingBars = foodItemDiv.querySelectorAll('.bar');
+                
+                ratingBars.forEach((bar, index) => {
+                    bar.style.width = `${(ratingCounts[index] / foodItem.reviews.length) * 100 || 0}%`;
+                });
+            }
+        }
+
+        function showMoreReviews(foodId) {
+            const moreReviewsContainer = document.getElementById(`more-reviews-${foodId}`);
+            moreReviewsContainer.style.display = 'block';
+            const showMoreButton = moreReviewsContainer.previousElementSibling; // The Show More button
+            showMoreButton.style.display = 'none'; // Hide the Show More button
+        }
+
+        function showLessReviews(foodId) {
+            const moreReviewsContainer = document.getElementById(`more-reviews-${foodId}`);
+            moreReviewsContainer.style.display = 'none';
+            const showMoreButton = moreReviewsContainer.previousElementSibling; // The Show More button
+            showMoreButton.style.display = 'inline-block'; // Show the Show More button again
+        }
+
+        // Initialize the food items on page load
+        displayFoodItems();
+    </script>
+</body>
+</html>
